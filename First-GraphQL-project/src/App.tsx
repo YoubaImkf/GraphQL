@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  const [characters, setCharacters] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedCharacter, setSelectedCharacter] = useState<SelectedCharacter | null>(null);
 
   useEffect(() => {
     async function fetchCharacters() {
@@ -15,11 +15,11 @@ function App() {
     fetchCharacters();
   }, [currentPage]);
 
-  const handleNextPage = () => {
+  const handleNextPage = (): void => {
     setCurrentPage(prevPage => prevPage + 1);
   };
 
-  const handleCharacterClick = async (characterId) => {
+  const handleCharacterClick = async (characterId: number): Promise<void> => {
     try {
       const response = await fetch(`https://rickandmortyapi.com/api/character/${characterId}`);
       const data = await response.json();
