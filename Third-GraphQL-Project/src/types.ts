@@ -28,14 +28,32 @@ export type Author = {
 export type Film = {
   __typename?: 'Film';
   id: Scalars['ID']['output'];
-  peoples?: Maybe<Array<People>>;
+  peoples: Array<Maybe<People>>;
   title: Scalars['String']['output'];
+};
+
+export type IncrementTrackViewsResponse = {
+  __typename?: 'IncrementTrackViewsResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+  track?: Maybe<Track>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  incrementTrackViews: IncrementTrackViewsResponse;
+};
+
+
+export type MutationIncrementTrackViewsArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type People = {
   __typename?: 'People';
   eye_color?: Maybe<Scalars['String']['output']>;
-  films?: Maybe<Array<Film>>;
+  films: Array<Maybe<Film>>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
 };
@@ -44,8 +62,8 @@ export type Query = {
   __typename?: 'Query';
   closestColor?: Maybe<Scalars['String']['output']>;
   divide?: Maybe<Scalars['Float']['output']>;
-  getFilms: Array<Film>;
-  getPeoples: Array<People>;
+  getFilms: Array<Maybe<Film>>;
+  getPeoples: Array<Maybe<People>>;
   getTracks: Array<Track>;
   multiply?: Maybe<Scalars['Float']['output']>;
 };
@@ -71,6 +89,7 @@ export type Track = {
   __typename?: 'Track';
   author: Author;
   id: Scalars['ID']['output'];
+  numberOfViews?: Maybe<Scalars['Int']['output']>;
   thumbnail?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
 };
@@ -151,7 +170,9 @@ export type ResolversTypes = {
   Film: ResolverTypeWrapper<FilmModel>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  IncrementTrackViewsResponse: ResolverTypeWrapper<IncrementTrackViewsResponse>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Mutation: ResolverTypeWrapper<{}>;
   People: ResolverTypeWrapper<PeopleModel>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -165,7 +186,9 @@ export type ResolversParentTypes = {
   Film: FilmModel;
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
+  IncrementTrackViewsResponse: IncrementTrackViewsResponse;
   Int: Scalars['Int']['output'];
+  Mutation: {};
   People: PeopleModel;
   Query: {};
   String: Scalars['String']['output'];
@@ -181,14 +204,26 @@ export type AuthorResolvers<ContextType = DataSourceContext, ParentType extends 
 
 export type FilmResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Film'] = ResolversParentTypes['Film']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  peoples?: Resolver<Maybe<Array<ResolversTypes['People']>>, ParentType, ContextType>;
+  peoples?: Resolver<Array<Maybe<ResolversTypes['People']>>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IncrementTrackViewsResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['IncrementTrackViewsResponse'] = ResolversParentTypes['IncrementTrackViewsResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  track?: Resolver<Maybe<ResolversTypes['Track']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  incrementTrackViews?: Resolver<ResolversTypes['IncrementTrackViewsResponse'], ParentType, ContextType, RequireFields<MutationIncrementTrackViewsArgs, 'id'>>;
+};
+
 export type PeopleResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['People'] = ResolversParentTypes['People']> = {
   eye_color?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  films?: Resolver<Maybe<Array<ResolversTypes['Film']>>, ParentType, ContextType>;
+  films?: Resolver<Array<Maybe<ResolversTypes['Film']>>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -197,8 +232,8 @@ export type PeopleResolvers<ContextType = DataSourceContext, ParentType extends 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   closestColor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryClosestColorArgs, 'hexa'>>;
   divide?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType, RequireFields<QueryDivideArgs, 'number1' | 'number2'>>;
-  getFilms?: Resolver<Array<ResolversTypes['Film']>, ParentType, ContextType>;
-  getPeoples?: Resolver<Array<ResolversTypes['People']>, ParentType, ContextType>;
+  getFilms?: Resolver<Array<Maybe<ResolversTypes['Film']>>, ParentType, ContextType>;
+  getPeoples?: Resolver<Array<Maybe<ResolversTypes['People']>>, ParentType, ContextType>;
   getTracks?: Resolver<Array<ResolversTypes['Track']>, ParentType, ContextType>;
   multiply?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType, RequireFields<QueryMultiplyArgs, 'number1' | 'number2'>>;
 };
@@ -206,6 +241,7 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
 export type TrackResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Track'] = ResolversParentTypes['Track']> = {
   author?: Resolver<ResolversTypes['Author'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  numberOfViews?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -214,6 +250,8 @@ export type TrackResolvers<ContextType = DataSourceContext, ParentType extends R
 export type Resolvers<ContextType = DataSourceContext> = {
   Author?: AuthorResolvers<ContextType>;
   Film?: FilmResolvers<ContextType>;
+  IncrementTrackViewsResponse?: IncrementTrackViewsResponseResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   People?: PeopleResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Track?: TrackResolvers<ContextType>;

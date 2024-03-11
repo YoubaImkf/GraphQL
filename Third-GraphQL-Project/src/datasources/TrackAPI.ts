@@ -1,31 +1,18 @@
 import { RESTDataSource } from "@apollo/datasource-rest";
-import {AuthorModel, FilmModel, PeopleModel, TrackModel} from "../models.js";
+import { AuthorModel, TrackModel } from "../models.ts";
 
 export class TrackAPI extends RESTDataSource {
-  // baseURL = "https://odyssey-lift-off-rest-api.herokuapp.com/";
+    baseURL = "https://odyssey-lift-off-rest-api.herokuapp.com/";
 
-  // getTracks() {
-  //   return this.get<TrackModel[]>('tracks')
-  // }
-  //
-  // getAuthorBy(id: string) {
-  //   return this.get<AuthorModel>(`author/${id}`)
-  // }
+    getTracks() {
+        return this.get<TrackModel[]>('tracks');
+    }
 
-  baseURL = "https://ghibliapi.dev/";
-  getFilms() {
-    return this.get<FilmModel[]>('films')
-  }
+    getAuthorBy(id: string) {
+        return this.get<AuthorModel>(`author/${id}`);
+    }
 
-  getFilmBy(id: string) {
-    return this.get<FilmModel[]>(`films/${id}`)
-  }
-
-  getPeoples() {
-    return this.get<PeopleModel[]>('people')
-  }
-  getPeopleBy(id: string) {
-    return this.get<PeopleModel[]>(`people/${id}`)
-  }
-
+    incrementTrackView(trackId: string) {
+        return this.patch<TrackModel>(`track/${trackId}/numberOfViews`);
+    }
 }

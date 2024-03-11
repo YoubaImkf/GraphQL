@@ -6,6 +6,7 @@ type Track {
   title: String!
   author: Author!
   thumbnail: String
+  numberOfViews: Int
 }
 
 type Author {
@@ -18,22 +19,33 @@ type People {
     id: ID!
     name: String!
     eye_color: String
-    films: [Film!]!
+    films: [Film]!
 }
 
 type Film {
     id: ID!
     title: String!
-    peoples: [People!]!
+    peoples: [People]!
 }
 
 type Query {
-
   divide(number1: Int!, number2: Int!): Float
   multiply(number1: Int!, number2: Int!): Float
   closestColor(hexa: String!): String
   getTracks: [Track!]!
-  getFilms: [Film!]!
-  getPeoples: [People!]!
+  getFilms: [Film]!
+  getPeoples: [People]!
 }
+
+type Mutation {
+    incrementTrackViews(id: ID!): IncrementTrackViewsResponse!
+}
+ 
+type IncrementTrackViewsResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    track: Track
+}
+
 `

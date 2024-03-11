@@ -17,11 +17,11 @@ export type PeopleModel = {
   id: string;
   name: string;
   eye_color: string;
-  filmId: string;
+  film: string[];
 };
 
 export type FilmModel = {
   id: string;
   title: string;
-  peopleId: string;
+  people: string[];
 };
