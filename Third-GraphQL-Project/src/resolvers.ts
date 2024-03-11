@@ -17,21 +17,26 @@ export const resolvers: Resolvers = {
       }
       return getClosestColor(hexa, ["#FF5733", "#33FF57", "#3357FF"])
     },
-    // getTracks: (_, __, {dataSources}) => {
-    //   return dataSources.trackAPI.getTracks()
-    // },
-    getFilms: (_, __, {dataSources}) => {
-        return dataSources.trackAPI.getFilms();
+
+    getFilms: async (_, __, {dataSources}) => {
+        const film = await dataSources.trackAPI.getFilms();
+        const mappedFilm = film.map(film => {
+            const id = extractUUID(film.id);
+            return { ...film, id };
+        })
+        return mappedFilm;
     },
-    getPeoples: (_, __, {dataSources}) => {
-        return dataSources.trackAPI.getPeoples();
-    },
+    getPeoples: async (_, __, { dataSources }) => {
+       const people = await dataSources.trackAPI.getPeoples(); // Await the promise
+       const mappedPeople = people.map(person => {
+           const id = extractUUID(person.id);
+           return { ...person, id };
+       });
+
+       return mappedPeople;
+      },
   },
 
-  // Track: {
-  //   author: (parent, _, {dataSources}) => {
-  //     return dataSources.trackAPI.getAuthorBy(parent.authorId);
-  //   }
   Film: {
       peoples: (parent, __, {dataSources}) => {
           return dataSources.trackAPI.getPeopleBy(parent.peopleId);
@@ -42,4 +47,14 @@ export const resolvers: Resolvers = {
           return dataSources.trackAPI.getFilmBy(parent.filmId);
       }
   },
+}
+
+function extractUUID(url: string): string {
+    const uuidPattern = /\/([a-f0-9-]+)$/i;
+    const matches = url.match(uuidPattern);
+    if (matches && matches.length > 1) {
+        return matches[1]; // Extracted UUID
+    }
+    // Return the original URL if no UUID found
+    return url;
 }
